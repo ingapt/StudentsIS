@@ -12,7 +12,7 @@ namespace StudentsIS.Classes
             
             foreach (var departament in departaments)
             {
-                Console.WriteLine($"{i++} {departament.Id} {departament.Name}");
+                Console.WriteLine($"{i++} {departament.Name}");
             }
         }
 

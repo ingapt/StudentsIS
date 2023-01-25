@@ -216,10 +216,9 @@ namespace StudentsIS.Classes
         public static void InsertExistingLectureToDepartament(StudentContext dbContext)
         {
             Console.Clear();
-            var numberofLectures = dbContext.Lectures.Count();
             Dispay.DisplayLectures(dbContext);
             Console.WriteLine("Pasirinkite paskaitos id, kurią priskirsime departamentui. ");
-            var intput_lec = Validation.GetValidNumbersFromConsole(numberofLectures);
+            var intput_lec = Validation.GetValidIntergerNumber();
             var lecture = dbContext.Lectures.SingleOrDefault(x=> x.Id == intput_lec);
             Console.WriteLine();
 
@@ -227,13 +226,13 @@ namespace StudentsIS.Classes
             Dispay.DisplayDepartaments(dbContext);
             Console.WriteLine("Pasirinkite departamento id, į kurį priskirsim paskaitą.");
             var input_dep = Validation.GetValidNumbersFromConsole(numberOfDepartaments);
+            input_dep = input_dep + 4;  //Mano duomenų bazėj departamento Id prasideda nuo 5. 
+            var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input_dep).SingleOrDefault();
+            departament.Lectures.Add(lecture);
 
-            lecture.Departaments.Add(dbContext.Departaments.Where(x => x.Id == input_dep).SingleOrDefault());
-            
-            dbContext.Lectures.Add(lecture);
             dbContext.SaveChanges();
             Console.WriteLine("Paskaita priskirta departamentui.");
-
+            Console.ReadKey();
         }
 
         public static void DeleteDepratament(this StudentContext dbContext)

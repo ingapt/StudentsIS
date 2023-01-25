@@ -33,5 +33,7 @@ namespace StudentsIS.Entities
         { 
             Id = id;
         }
+
+        public Lecture() { }
     }
 }

@@ -22,7 +22,7 @@ namespace StudentsIS.Classes
                         DepartamentsStart.Start(dbContext);
                         break;
                     case 2:
-                        LecturesStart.Start();
+                        LecturesStart.Start(dbContext);
                         break;
                     case 3:
                         StudentsStart.Start();

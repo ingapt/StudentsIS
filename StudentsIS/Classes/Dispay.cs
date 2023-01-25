@@ -1,4 +1,5 @@
 ﻿using StudentsIS.Entities;
+using System.Runtime.CompilerServices;
 
 namespace StudentsIS.Classes
 {
@@ -10,8 +11,28 @@ namespace StudentsIS.Classes
             
             foreach (var departament in departaments)
             {
-                Console.WriteLine($"{departament.Name}");
+                Console.WriteLine($"{departament.Id} {departament.Name}");
             }
         }
-    }
+
+        public static void DisplayLectures(this StudentContext dbContext)
+        { 
+            var lectures = dbContext.Lectures.ToList();
+
+            foreach(var lecture in lectures) 
+            {
+                Console.WriteLine($"{lecture.Id} {lecture.Name}");
+            }
+        }
+
+		public static void DisplayStudents(this StudentContext dbContext)
+		{
+			var students = dbContext.Students.ToList();
+
+			foreach (var student in students)
+			{
+				Console.WriteLine($"{student.Id} {student.Name} {student.Surname}");
+			}
+		}
+	}
 }

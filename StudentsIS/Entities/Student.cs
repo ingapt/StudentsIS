@@ -27,12 +27,21 @@ namespace StudentsIS.Entities
         {
             Name = name;
             Surname = surname;
-            DepartamentId = departamentId;
+            DepartamentId = DepartamentId;
         }
 
-        public Student(int id)
+		public Student(string name, string surname)
+		{
+			Name = name;
+			Surname = surname;
+		}
+
+
+		public Student(int id)
         {
             Id = id;
         }
+
+        public Student() { }
     }
 }

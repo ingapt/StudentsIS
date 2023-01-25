@@ -15,13 +15,13 @@ namespace StudentsIS.Classes.Functions
 			var student = dbContext.Students.Include("Lectures").Where(x => x.Id == input_studId).SingleOrDefault();
             if (student != null)
             {
-                Console.WriteLine($"Studentas: {student.Id} {student.Name} {student.Surname}");
+                Console.WriteLine($"Studentas: {student.Id} {student.Name} {student.Surname}. Paskaitos: ");
                 if (student.Lectures.Count > 0)
                 {
                     Console.WriteLine("Studento paskaitos: ");
                     foreach (var lecture in student.Lectures)
                     {
-                        Console.WriteLine($"{lecture.Name} {lecture.Credit} {lecture.Teacher}");
+                        Console.WriteLine($"{lecture.Name} {lecture.Credit} {lecture.Teacher} ");
                     }
                 }
                 else
@@ -35,14 +35,62 @@ namespace StudentsIS.Classes.Functions
             }
 		}
 
+        public static void DisplayDepartamentsWithStudents(this StudentContext dbContext)
+        {
+			Console.Clear();
+			Dispay.DisplayDepartaments(dbContext);
+			Console.WriteLine("Pasirinkite departamento Id. Atvaizduosimo jo paskaitas");
+			var input_depId = Validation.GetValidIntergerNumber();
+			var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == input_depId).SingleOrDefault();
+			Console.WriteLine($"Departamentas: {departament.Name}. Studentai: ");
+			if (departament != null)
+			{
+				if (departament.Students.Count > 0)
+				{
+					foreach (var student in departament.Students)
+					{
+						Console.WriteLine($"{student.Name} {student.Surname}");
+					}
+				}
+				else
+				{
+					Console.WriteLine("Departamentas neturi studentų.");
+				}
+			}
+			else
+			{
+				Console.WriteLine("Tokio departamento nėra.");
+			}
+
+		}
+
         public static void DisplayDepartamensWithLectures(this StudentContext dbContext)
         {
             Console.Clear();
             Dispay.DisplayDepartaments(dbContext);
             Console.WriteLine("Pasirinkite departamento Id. Atvaizduosimo jo paskaitas");
             var input_lectId = Validation.GetValidIntergerNumber();
-
-        }
+			var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input_lectId).SingleOrDefault();
+			Console.WriteLine($"Departamentas: {departament.Name}. Paskaitos: ");
+            if (departament != null)
+            {
+                if (departament.Lectures.Count > 0)
+                {
+                    foreach (var lecture in departament.Lectures)
+                    {
+                        Console.WriteLine($"{lecture.Name} {lecture.Credit} {lecture.Teacher}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Departamentas neturi paskaitų.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Tokio departamento nėra.");
+            }
+		}
 
         public static void DisplayDepartaments(this StudentContext dbContext)
         {

@@ -25,7 +25,7 @@ namespace StudentsIS.Classes
                         LecturesStart.Start(dbContext);
                         break;
                     case 3:
-                        StudentsStart.Start();
+                        StudentsStart.Start(dbContext);
                         break;
                     case 4:
                         DisplayStart.Start();

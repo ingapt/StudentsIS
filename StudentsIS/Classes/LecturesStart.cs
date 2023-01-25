@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StudentsIS.Classes.Functions;
 
 namespace StudentsIS.Classes
 {

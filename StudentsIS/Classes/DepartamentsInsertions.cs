@@ -1,4 +1,6 @@
-﻿namespace StudentsIS.Classes
+﻿using StudentsIS.Classes.Functions;
+
+namespace StudentsIS.Classes
 {
     public static class DepartamentsInsertions
     {

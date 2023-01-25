@@ -7,11 +7,12 @@ namespace StudentsIS.Classes
     {
         public static void DisplayDepartaments(this StudentContext dbContext)
         {
+            var i = 1;
             var departaments = dbContext.Departaments.ToList();
             
             foreach (var departament in departaments)
             {
-                Console.WriteLine($"{departament.Id} {departament.Name}");
+                Console.WriteLine($"{i++} {departament.Id} {departament.Name}");
             }
         }
 

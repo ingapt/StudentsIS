@@ -12,10 +12,12 @@ namespace StudentsIS.Entities
         public List<Student> Students { get; set; }
 
 
-        public Departament(string name, List<Lecture> lectures) 
+        public Departament(string name, List<Lecture> lectures, List<Student> students) 
         { 
             Name = name;
             Lectures = lectures;
+            Students = students;
+
         }
 
         public Departament(int id, List<Lecture> lectures)

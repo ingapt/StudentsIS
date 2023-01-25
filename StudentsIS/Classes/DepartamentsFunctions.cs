@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StudentsIS.Classes;
 using StudentsIS.Entities;
+using System.Data;
 using System.Security.Cryptography.X509Certificates;
 
 namespace StudentsIS.Classes
@@ -18,8 +19,9 @@ namespace StudentsIS.Classes
                 Name = name,
             };
             dbContext.Departaments.Add(newDepartament);
+            dbContext.SaveChanges();
 
-            Console.WriteLine("Ar norite pridėti studentų? Taip - t, T; Ne - n, N");
+			Console.WriteLine("Ar norite pridėti studentų? Taip - t, T; Ne - n, N");
             var input = Validation.GetYesOrNoFromConsole();
             if (input == 'T')
             {
@@ -30,18 +32,16 @@ namespace StudentsIS.Classes
             input = Validation.GetYesOrNoFromConsole();
             if (input == 'T')
             {
-                InsertLectureToThisDeartament(dbContext, newDepartament);
+                InsertLectureToThisDeartament(dbContext, newDepartament.Id);
             }
+		}
 
-            dbContext.SaveChanges();
-
-        }
-
-        public static void InsertLectureToDepartament(this StudentContext dbContext)
+		public static void InsertLectureToDepartament(this StudentContext dbContext)
         {
             bool toDo = true;
             while (toDo)
             {
+                Console.Clear();
                 Console.WriteLine("Pasirinkite: ");
                 Console.WriteLine("[1] Sukurti naują paskaitą ir pridėti ją prie departamento. \n[2] Pridėti egzistuojančią paskaitą prie departamento \n[3] Grįžti atgal");
                 var input = Validation.GetValidNumbersFromConsole(3);
@@ -67,6 +67,7 @@ namespace StudentsIS.Classes
 			bool toDo = true;
 			while (toDo)
 			{
+                Console.Clear();
 				Console.WriteLine("Pasirinkite: ");
 				Console.WriteLine("[1] Sukurti naują studentą ir pridėti ją prie departamento. \n[2] Pridėti egzistuojantį studentą prie departamento \n[3] Grįžti atgal");
 				var input = Validation.GetValidNumbersFromConsole(3);
@@ -97,22 +98,29 @@ namespace StudentsIS.Classes
                 var name = Console.ReadLine();
                 Console.WriteLine("Įveskite studento pavardę: ");
                 var surname = Console.ReadLine();
-                dbContext.Students.Add(new Student(name, surname, departamentId));
 
-                Console.WriteLine("Ar norite dar įtraukti studentą? Taip - T, t; Ne - N, n");
+                var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == departamentId).SingleOrDefault();
+                var student = new Student(name, surname, departamentId);
+                departament.Students.Add(student);
+    			dbContext.SaveChanges();
+
+				Console.WriteLine("Ar norite dar įtraukti studentą? Taip - T, t; Ne - N, n");
                 var input = Validation.GetYesOrNoFromConsole();
                 if (input == 'N')
                 {
                     toDo = false;
                 }
             }
-            dbContext.SaveChanges();
         }
 
 		private static void InsertNewStudentToTheDepartament(StudentContext dbContext)
 		{
 			Console.Clear();
 			Dispay.DisplayDepartaments(dbContext);
+			var numberOfDepartaments = dbContext.Departaments.Count();
+			Console.WriteLine("Pasirinkite departamento id, į kurį įtrauksime paskaitą: ");
+			var input = Validation.GetValidNumbersFromConsole(numberOfDepartaments);
+            input = input + 4;
 			Console.WriteLine("Sukurkite studentą: ");
 			Console.WriteLine("Įveskite studento vardą: ");
 			var studentName = Console.ReadLine();
@@ -121,15 +129,12 @@ namespace StudentsIS.Classes
 			
 			var student = new Student(studentName, studentSurname);
 
-			var numberOfDepartaments = dbContext.Departaments.Count();
-			Console.WriteLine("Pasirinkite departamento id, į kurį įtrauksime paskaitą: ");
-			var input = Validation.GetValidNumbersFromConsole(numberOfDepartaments);
-			var departament = dbContext.Departaments.SingleOrDefault(x => x.Id == input);
+            var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == input).SingleOrDefault();
+            student.DepartamentId = input;
             departament.Students.Add(student);
-            
-			dbContext.SaveChanges();
+            dbContext.SaveChanges();
 		    Console.WriteLine($"Sukurtas studentas ir priskirtas departamentui {departament.Name}");
-
+            Console.ReadKey();
 		}
 
 		private static void InsertExistingStudentToDepartament(StudentContext dbContext)
@@ -152,9 +157,10 @@ namespace StudentsIS.Classes
 			dbContext.Students.Add(student);
 			dbContext.SaveChanges();
 			Console.WriteLine("Studentas priskirtas departamentui");
+            Console.ReadKey();
 		}
 
-		public static void InsertLectureToThisDeartament(this StudentContext dbContext, Departament departament)
+		public static void InsertLectureToThisDeartament(this StudentContext dbContext, int departamentId)
         {
             bool toDo = true;
 
@@ -167,25 +173,31 @@ namespace StudentsIS.Classes
                 var credit = Validation.GetValidIntergerNumber();
                 Console.WriteLine("Įveskite dėstytojo pavardę. ");
                 var teacher = Console.ReadLine();
-
                 var lecture = new Lecture(name, credit, teacher);
-                
 
+                var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == departamentId).SingleOrDefault();
+                departament.Lectures.Add(lecture);
+                dbContext.SaveChanges();
+                Console.WriteLine();
                 Console.WriteLine("Ar norite dar įtraukti paskaitą? Taip - T, t; Ne - N, n");
                 var input = Validation.GetYesOrNoFromConsole();
                 if (input == 'N')
                 {
                     toDo = false;
                 }
-                dbContext.SaveChanges();
-            }
+			}
         }
 
         public static void InsertNewLectureToTheDepartament(StudentContext dbContext)
         {
             Console.Clear();
             Dispay.DisplayDepartaments(dbContext);
-            Console.WriteLine("Sukurkite paskaitą: ");
+			var numberOfDepartaments = dbContext.Departaments.Count();
+			Console.WriteLine("Pasirinkite departamento id, į kurį įtrauksime paskaitą: ");
+			var input = Validation.GetValidNumbersFromConsole(numberOfDepartaments);
+            input = input + 4;
+            Console.WriteLine();
+			Console.WriteLine("Sukurkite paskaitą: ");
             Console.WriteLine("Įveskite paskaitos pavadinimą: ");
             var lectureName = Console.ReadLine();
             Console.WriteLine("Įveskite kreditų skaičių: ");
@@ -193,15 +205,12 @@ namespace StudentsIS.Classes
             Console.WriteLine("Įveskite dėstytojo pavardę: ");
             var teacherOfLecture = Console.ReadLine();
             var lecture = new Lecture(lectureName, creditOfLecture, teacherOfLecture);
-            
-            var numberOfDepartaments = dbContext.Departaments.Count();
-            Console.WriteLine("Pasirinkite departamento id, į kurį įtrauksime paskaitą: ");
-            var input = Validation.GetValidNumbersFromConsole(numberOfDepartaments);
-            var departament = dbContext.Departaments.SingleOrDefault(x => x.Id == input);
-            lecture.Departaments.Add(dbContext.Departaments.Where(x => x.Id == input).SingleOrDefault());
-            dbContext.Lectures.Add(lecture);
+
+            var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input).SingleOrDefault();
+			departament.Lectures.Add(lecture);
             dbContext.SaveChanges();
             Console.WriteLine($"Paskaita sukurta ir priskirta departamentui {departament.Name}");
+            Console.ReadKey();
         }
 
         public static void InsertExistingLectureToDepartament(StudentContext dbContext)
@@ -220,10 +229,26 @@ namespace StudentsIS.Classes
             var input_dep = Validation.GetValidNumbersFromConsole(numberOfDepartaments);
 
             lecture.Departaments.Add(dbContext.Departaments.Where(x => x.Id == input_dep).SingleOrDefault());
+            
             dbContext.Lectures.Add(lecture);
             dbContext.SaveChanges();
             Console.WriteLine("Paskaita priskirta departamentui.");
 
+        }
+
+        public static void DeleteDepratament(this StudentContext dbContext)
+        {
+            Console.Clear();
+            var numberOfDepart = dbContext.Departaments.Count();
+            Dispay.DisplayDepartaments(dbContext);
+            Console.WriteLine("Pasirinkite departamento id, kurį pašalinsime.: ");
+            var input_dep = Validation.GetValidNumbersFromConsole(numberOfDepart);
+            var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == input_dep).SingleOrDefault();
+            var students = departament.Students;
+            dbContext.Students.RemoveRange(students);
+            dbContext.Departaments.Remove(departament);
+            dbContext.SaveChanges();
+            Console.WriteLine("Departamentas pašalintas. ");
         }
     }
 }

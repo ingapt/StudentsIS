@@ -137,7 +137,7 @@ namespace StudentsIS.Classes
             Console.ReadKey();
 		}
 
-		private static void InsertExistingStudentToDepartament(StudentContext dbContext)
+		public static void InsertExistingStudentToDepartament(StudentContext dbContext)
 		{
 			Console.Clear();
 			var numberOfStudents = dbContext.Students.Count();

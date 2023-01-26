@@ -34,7 +34,7 @@ namespace StudentsIS.Migrations
 
                     b.HasIndex("LecturesId");
 
-                    b.ToTable("DepartamentLecture");
+                    b.ToTable("DepartamentLecture", (string)null);
                 });
 
             modelBuilder.Entity("StudentsIS.Entities.Departament", b =>
@@ -51,7 +51,7 @@ namespace StudentsIS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departaments");
+                    b.ToTable("Departaments", (string)null);
                 });
 
             modelBuilder.Entity("StudentsIS.Entities.Lecture", b =>
@@ -80,7 +80,7 @@ namespace StudentsIS.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Lectures");
+                    b.ToTable("Lectures", (string)null);
                 });
 
             modelBuilder.Entity("StudentsIS.Entities.Student", b =>
@@ -106,7 +106,7 @@ namespace StudentsIS.Migrations
 
                     b.HasIndex("DepartamentId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("DepartamentLecture", b =>

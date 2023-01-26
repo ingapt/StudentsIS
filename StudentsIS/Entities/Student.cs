@@ -9,7 +9,7 @@ namespace StudentsIS.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public List<Lecture> Lectures { get; set; } 
+        public List<Lecture> Lectures { get; set; } = new List<Lecture>();
 
         [ForeignKey("Departament")]
         public int? DepartamentId { get; set; }

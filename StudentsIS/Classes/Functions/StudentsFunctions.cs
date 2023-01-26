@@ -5,26 +5,6 @@ namespace StudentsIS.Classes.Functions
 {
     public static class StudentsFunctions
     {
-        public static void CreateStudent(this StudentContext dbContext)
-        {
-            Console.Clear();
-            Console.WriteLine("Įveskite studento vardą: ");
-            var name = Console.ReadLine();
-            Console.WriteLine("Įveskite studento pavardę");
-            var surname = Console.ReadLine();
-
-            var newStudent = new Student()
-            {
-                Name = name,
-                Surname = surname,
-            };
-
-            dbContext.Students.Add(newStudent);
-            dbContext.SaveChanges();
-            Console.WriteLine("Naujas studentas įvestas");
-            Console.ReadKey();
-        }
-
         public static void AddLecturesForStudent(this StudentContext dbContext)
         {
             Console.Clear();
@@ -32,9 +12,15 @@ namespace StudentsIS.Classes.Functions
             Console.WriteLine("Įveskite studento id.: ");
             var input = Validation.GetValidIntergerNumber();
             var student = dbContext.Students.Where(x => x.Id == input).SingleOrDefault();
-            dbContext.AddLectures(student);
+            
+            var lectures = dbContext.Departaments.Include("Lectures").Where(x => x.Id == student.DepartamentId).First().Lectures.ToList();
+            foreach (var lecture in lectures)
+            { 
+                student.Lectures.Add(lecture);
+            }
+                  
             dbContext.SaveChanges();
-            Console.WriteLine("Studentas įtrauktos paskaitos.");
+            Console.WriteLine("Studentui įtrauktos paskaitos.");
             Console.ReadKey();
         }
 
@@ -51,23 +37,14 @@ namespace StudentsIS.Classes.Functions
             var input_depId = Validation.GetValidIntergerNumber();
             student.DepartamentId = input_depId;
             student.Lectures.Clear();
-            dbContext.AddLectures(student);
-            dbContext.SaveChanges();
+			var lectures = dbContext.Departaments.Include("Lectures").Where(x => x.Id == student.DepartamentId).First().Lectures.ToList();
+			foreach (var lecture in lectures)
+			{
+				student.Lectures.Add(lecture);
+			}
+			dbContext.SaveChanges();
             Console.WriteLine("Studentui pakeistas departamentas ir paskaitos");
-        }
-
-        public static void AddLectures(this StudentContext dbContext, Student student)
-        {
-            dbContext.DisplayDepartaments();
-            Console.WriteLine("Pasirinkite departamento id, kuriam priklausys studentas");
-            var input_dep = Validation.GetValidIntergerNumber();
-            var lectures = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input_dep).SingleOrDefault().Lectures.ToList();
-
-            foreach (var lecuture in lectures)
-            {
-                var lectureId = lecuture.Id;
-                student.Lectures.Add(dbContext.Lectures.Where(x => x.Id == lectureId).SingleOrDefault());
-            }
+            Console.ReadKey();
         }
 
         public static void DeleteStudent(this StudentContext dbContext)
@@ -80,6 +57,7 @@ namespace StudentsIS.Classes.Functions
             dbContext.Students.Remove(student);
             dbContext.SaveChanges();
             Console.WriteLine("Studentas pašalintas. ");
+            Console.ReadKey();
         }
     }
 }

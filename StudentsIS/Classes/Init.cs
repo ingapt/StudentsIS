@@ -28,7 +28,7 @@ namespace StudentsIS.Classes
                         StudentsStart.Start(dbContext);
                         break;
                     case 4:
-                        DisplayStart.Start();
+                        DisplayStart.Start(dbContext);
                         break;
                     case 5:
                         toDo= false;

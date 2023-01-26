@@ -116,20 +116,17 @@ namespace StudentsIS.Classes.Functions
         {
             Console.Clear();
             dbContext.DisplayDepartaments();
-            var numberOfDepartaments = dbContext.Departaments.Count();
             Console.WriteLine("Pasirinkite departamento id, į kurį įtrauksime paskaitą: ");
-            var input = numberOfDepartaments.GetValidNumbersFromConsole();
-            input = input + 4;
+            var input_depId = Validation.GetValidIntergerNumber();
+            
             Console.WriteLine("Sukurkite studentą: ");
             Console.WriteLine("Įveskite studento vardą: ");
             var studentName = Console.ReadLine();
             Console.WriteLine("Įveskite studento pavardę: ");
             var studentSurname = Console.ReadLine();
-
             var student = new Student(studentName, studentSurname);
-
-            var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == input).SingleOrDefault();
-            student.DepartamentId = input;
+            var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == input_depId).SingleOrDefault();
+            student.DepartamentId = input_depId;
             departament.Students.Add(student);
             dbContext.SaveChanges();
             Console.WriteLine($"Sukurtas studentas ir priskirtas departamentui {departament.Name}");
@@ -139,18 +136,16 @@ namespace StudentsIS.Classes.Functions
         public static void InsertExistingStudentToDepartament(StudentContext dbContext)
         {
             Console.Clear();
-            var numberOfStudents = dbContext.Students.Count();
             dbContext.DisplayStudents();
             Console.WriteLine("Pasirinkite studento id, kurį priskirsime departamentui. ");
-            var intput_stud = numberOfStudents.GetValidNumbersFromConsole();
-            var student = dbContext.Students.SingleOrDefault(x => x.Id == intput_stud);
+            var intput_studId = Validation.GetValidIntergerNumber();
+            var student = dbContext.Students.SingleOrDefault(x => x.Id == intput_studId);
             Console.WriteLine();
 
-            var numberOfDepartaments = dbContext.Departaments.Count();
             dbContext.DisplayDepartaments();
             Console.WriteLine("Pasirinkite departamento id, kuriam priskirsim studentą.");
-            var input_dep = numberOfDepartaments.GetValidNumbersFromConsole();
-            var departament = dbContext.Departaments.SingleOrDefault(x => x.Id == input_dep);
+            var input_depId = Validation.GetValidIntergerNumber();
+            var departament = dbContext.Departaments.SingleOrDefault(x => x.Id == input_depId);
 
             student.DepartamentId = departament.Id;
             dbContext.Students.Add(student);
@@ -191,10 +186,8 @@ namespace StudentsIS.Classes.Functions
         {
             Console.Clear();
             dbContext.DisplayDepartaments();
-            var numberOfDepartaments = dbContext.Departaments.Count();
             Console.WriteLine("Pasirinkite departamento id, į kurį įtrauksime paskaitą: ");
-            var input = numberOfDepartaments.GetValidNumbersFromConsole();
-            input = input + 4;
+            var input_depId = Validation.GetValidIntergerNumber();
             Console.WriteLine();
             Console.WriteLine("Sukurkite paskaitą: ");
             Console.WriteLine("Įveskite paskaitos pavadinimą: ");
@@ -205,7 +198,7 @@ namespace StudentsIS.Classes.Functions
             var teacherOfLecture = Console.ReadLine();
             var lecture = new Lecture(lectureName, creditOfLecture, teacherOfLecture);
 
-            var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input).SingleOrDefault();
+            var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input_depId).SingleOrDefault();
             departament.Lectures.Add(lecture);
             dbContext.SaveChanges();
             Console.WriteLine($"Paskaita sukurta ir priskirta departamentui {departament.Name}");
@@ -221,12 +214,10 @@ namespace StudentsIS.Classes.Functions
             var lecture = dbContext.Lectures.SingleOrDefault(x => x.Id == intput_lec);
             Console.WriteLine();
 
-            var numberOfDepartaments = dbContext.Departaments.Count();
             dbContext.DisplayDepartaments();
             Console.WriteLine("Pasirinkite departamento id, į kurį priskirsim paskaitą.");
-            var input_dep = numberOfDepartaments.GetValidNumbersFromConsole();
-            input_dep = input_dep + 4;  //Mano duomenų bazėj departamento Id prasideda nuo 5. 
-            var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input_dep).SingleOrDefault();
+            var input_depId = Validation.GetValidIntergerNumber();
+            var departament = dbContext.Departaments.Include("Lectures").Where(x => x.Id == input_depId).SingleOrDefault();
             departament.Lectures.Add(lecture);
 
             dbContext.SaveChanges();
@@ -237,11 +228,10 @@ namespace StudentsIS.Classes.Functions
         public static void DeleteDepratament(this StudentContext dbContext)
         {
             Console.Clear();
-            var numberOfDepart = dbContext.Departaments.Count();
             dbContext.DisplayDepartaments();
             Console.WriteLine("Pasirinkite departamento id, kurį pašalinsime.: ");
-            var input_dep = numberOfDepart.GetValidNumbersFromConsole();
-            var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == input_dep).SingleOrDefault();
+            var input_depId = Validation.GetValidIntergerNumber();
+            var departament = dbContext.Departaments.Include("Students").Where(x => x.Id == input_depId).SingleOrDefault();
             var students = departament.Students;
             dbContext.Students.RemoveRange(students);
             dbContext.Departaments.Remove(departament);

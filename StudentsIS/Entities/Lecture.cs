@@ -13,6 +13,7 @@ namespace StudentsIS.Entities
         public string Teacher { get; set; }
         public List<Departament> Departaments { get; set; }
 
+
         public Lecture(string name, int credit, string teacher, List<Departament> departaments)
         { 
             Name = name;

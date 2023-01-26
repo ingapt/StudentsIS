@@ -5,8 +5,8 @@ namespace StudentsIS.Classes
 {
     public static class DisplayStart
     {
-        public static void Start(this StudentContext dbContext)
-        {
+		public static void Start(this StudentContext dbContext)
+		{
 			bool toDo = true;
 
 			while (toDo)
@@ -33,5 +33,6 @@ namespace StudentsIS.Classes
 						break;
 				}
 			}
+		}
     }
 }

@@ -15,7 +15,7 @@ namespace StudentsIS.Classes.Functions
 			var student = dbContext.Students.Include("Lectures").Where(x => x.Id == input_studId).SingleOrDefault();
             if (student != null)
             {
-                Console.WriteLine($"Studentas: {student.Id} {student.Name} {student.Surname}. Paskaitos: ");
+                Console.WriteLine($"Studentas: {student.Id} {student.Name} {student.Surname}.");
                 if (student.Lectures.Count > 0)
                 {
                     Console.WriteLine("Studento paskaitos: ");
@@ -33,6 +33,7 @@ namespace StudentsIS.Classes.Functions
             { 
                 Console.WriteLine("Toks studentas neegzistuoja");
             }
+            Console.ReadKey();
 		}
 
         public static void DisplayDepartamentsWithStudents(this StudentContext dbContext)
@@ -61,7 +62,7 @@ namespace StudentsIS.Classes.Functions
 			{
 				Console.WriteLine("Tokio departamento nėra.");
 			}
-
+            Console.ReadKey();
 		}
 
         public static void DisplayDepartamensWithLectures(this StudentContext dbContext)
@@ -90,16 +91,16 @@ namespace StudentsIS.Classes.Functions
             {
                 Console.WriteLine("Tokio departamento nėra.");
             }
+            Console.ReadKey();
 		}
 
         public static void DisplayDepartaments(this StudentContext dbContext)
         {
-            var i = 1;
             var departaments = dbContext.Departaments.ToList();
 
             foreach (var departament in departaments)
             {
-                Console.WriteLine($"{i++} {departament.Name}");
+                Console.WriteLine($"{departament.Id} {departament.Name}");
             }
         }
 
